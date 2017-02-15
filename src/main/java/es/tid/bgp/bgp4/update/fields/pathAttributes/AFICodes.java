@@ -4,4 +4,5 @@ package es.tid.bgp.bgp4.update.fields.pathAttributes;
 
 public class AFICodes {
 	public static final int AFI_BGP_LS=16388;
+	public static final int AFI_IP=1;
 }

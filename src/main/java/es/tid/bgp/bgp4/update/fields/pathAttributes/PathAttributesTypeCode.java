@@ -21,10 +21,18 @@ public class PathAttributesTypeCode {
 	public final static int PATH_ATTRIBUTE_TYPECODE_ATOMIC_AGGREGATE=6;
 	//AGGREGATOR (Type Code 7)
 	public final static int PATH_ATTRIBUTE_TYPECODE_AGGREGATOR=7;
+	//COMMUNITY (Type Code 8)
+	public final static int PATH_ATTRIBUTE_TYPECODE_COMMUNITY=8;
+	//ORIGINATOR ID (Type Code 9)
+	public final static int PATH_ATTRIBUTE_TYPECODE_ORIGINATOR_ID=9;
+	//CLUSTER LIST (Type Code 10)
+	public final static int PATH_ATTRIBUTE_TYPECODE_CLUSTER_LIST=10;
 	//NLRI - MP_REACH_NLRI rfc4760
 	public final static int PATH_ATTRIBUTE_TYPECODE_MP_REACH_NLRI=14;
 	//NLRI - MP_UNREACH_NLRI rfc4760
 	public final static int PATH_ATTRIBUTE_TYPECODE_MP_UN_REACH_NLRI=15;
+	//EXTENDED COMMUNITY (Type Code 16)
+	public final static int PATH_ATTRIBUTE_TYPECODE_EXT_COMMUNITY=16;
 	
 	//LINKSTATE (Inventado!!!!!! no lo encuentro)
 	//public final static int PATH_ATTRIBUTE_TYPECODE_LINKSTATE = 99;

@@ -199,7 +199,22 @@ public class BGP4Update extends BGP4Message
 				{
 					AS_Path_Attribute as_Path_Attribute = new AS_Path_Attribute(messageBytes, offset);
 					pathAttributes.add(as_Path_Attribute);
-				} else if((attribute_typeCode == PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_BGP_LS_ATTRIBUTE) ||
+				} else if (attribute_typeCode == PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_LOCAL_PREF) 
+				{
+					Local_Pref_Attribute localpref = new Local_Pref_Attribute(messageBytes, offset);
+					pathAttributes.add(localpref);
+
+				} else if (attribute_typeCode == PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_COMMUNITY) 
+				{
+					Community_Attribute community = new Community_Attribute(messageBytes, offset);
+					pathAttributes.add(community);
+
+				}  else if (attribute_typeCode == PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_EXT_COMMUNITY) 
+				{
+					Extended_Communitiy_Attribute extcommunity = new Extended_Communitiy_Attribute(messageBytes, offset);
+					pathAttributes.add(extcommunity);
+
+				}else if((attribute_typeCode == PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_BGP_LS_ATTRIBUTE) ||
 						(attribute_typeCode == PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_BGP_LS_ATTRIBUTE_LEGACY))
 				{
 					LinkStateAttribute linkState_Attribute = new LinkStateAttribute(messageBytes, offset);
@@ -208,10 +223,16 @@ public class BGP4Update extends BGP4Message
 				{
 					//PATH_ATTRIBUTE_TYPECODE_MP_REACH_NLRI
 					int afi = MP_Reach_Attribute.getAFI(messageBytes, offset);
+					int safi = MP_Reach_Attribute.getSAFI(messageBytes, offset);
+
 					if(afi == AFICodes.AFI_BGP_LS)
 					{
 						BGP_LS_MP_Reach_Attribute blsra = new BGP_LS_MP_Reach_Attribute(messageBytes, offset);
 						pathAttributes.add(blsra);
+					} else if(afi == AFICodes.AFI_IP && safi==SAFICodes.SAFI_MPLS_LABELLED_VPN_ADDRESS)
+					{
+						MPLS_LABELLED_VPN_ADDRESS_MP_Reach_Attribute ipv4mplsvpn = new MPLS_LABELLED_VPN_ADDRESS_MP_Reach_Attribute(messageBytes, offset);
+						pathAttributes.add(ipv4mplsvpn);
 					} else
 					{
 						Generic_MP_Reach_Attribute gblsra = new Generic_MP_Reach_Attribute(messageBytes, offset);
@@ -219,8 +240,18 @@ public class BGP4Update extends BGP4Message
 					}
 				} else if(attribute_typeCode == PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_MP_UN_REACH_NLRI)
 				{
-					Generic_MP_Unreach_Attribute mpUnreachAttribute = new Generic_MP_Unreach_Attribute(messageBytes, offset);
-					pathAttributes.add(mpUnreachAttribute);
+					//PATH_ATTRIBUTE_TYPECODE_MP_UNREACH_NLRI
+					int afi = MP_Reach_Attribute.getAFI(messageBytes, offset);
+					int safi = MP_Reach_Attribute.getSAFI(messageBytes, offset);
+					if(afi == AFICodes.AFI_IP && safi==SAFICodes.SAFI_MPLS_LABELLED_VPN_ADDRESS)
+					{
+						MPLS_LABELLED_VPN_ADDRESS_MP_Unreach_Attribute ipv4mplsvpn = new MPLS_LABELLED_VPN_ADDRESS_MP_Unreach_Attribute(messageBytes, offset);
+						pathAttributes.add(ipv4mplsvpn);
+					} else
+					{
+						Generic_MP_Reach_Attribute gblsra = new Generic_MP_Reach_Attribute(messageBytes, offset);
+						pathAttributes.add(gblsra);
+					}
 				} else
 				{
 					log.warn("attribute_typeCode NOT supported by this implementation " + attribute_typeCode);
@@ -325,7 +356,10 @@ public class BGP4Update extends BGP4Message
 	@Override
 	public String toString()
 	{
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
+		
+		if (withdrawnRoutesLength != 0 || totalPathAttibuteLength != 0) {
+
 		StringBuffer sb = new StringBuffer((withdrawnRoutesLength + totalPathAttibuteLength) * 800);
 		sb.append("BGP4Update Msg: ");
 		if(withdrawnRoutesLength != 0)
@@ -345,6 +379,11 @@ public class BGP4Update extends BGP4Message
 			sb.append(nlri.toString());
 
 		return sb.toString();
+		}
+		else {
+		String msg = "BGP4Update Msg: EMPTY UPDATE";
+		return msg;
+		}
 	}
 
 }

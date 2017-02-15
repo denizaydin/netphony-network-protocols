@@ -84,7 +84,7 @@ public class AS_Path_Segment implements BGP4Element
 
 		for(int i = 0; i < numberOfSegments; i++)
 		{
-			bytes[offset++] = (byte) ((segments[i] & 0xFF00 >> 8) & 0xFF);
+			bytes[offset++] = (byte) (((segments[i] & 0xFF00) >> 8) & 0xFF);
 			bytes[offset++] = (byte) (segments[i] & 0xFF);
 		}
 
